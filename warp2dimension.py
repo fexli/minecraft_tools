@@ -24,9 +24,70 @@ def warp2Dimension(str_):
 def warp2Dimension_fromBook(*eachPage):
     return warp2Dimension('\n'.join(eachPage))
 
+# /warp hex(list)[2:]
+# 一个用于计算dimension的例子
+def calculate(startint=0, times=10000):
+    import struct
+    structbyte_ = b''
+    l = []
+    for i in range(startint,startint+times):
+        dim = warp2Dimension(hex(i)[2:])
+        l.append(dim)
+        structbyte_ += struct.pack('>I', dim)
+    return structbyte_,l
+
+
+def countrepeat(list_):
+    import numpy as np
+    li = np.array(list_)
+    for item in li:
+        whr = np.where(li==item)[0]
+        s_count = len(whr)
+        if s_count > 1:
+            print("Dim %d repeat at %s" % (item, whr))
+# Dim 618932306 repeat at [   1427 1777432]
+# Dim 1878747668 repeat at [   1673 1805088]
+# Dim 78823299 repeat at [   2281 1217584]
+# Dim 708874572 repeat at [   6325 1461290]
+# Dim 335680645 repeat at [ 6435 34590]
+# Dim 1678524152 repeat at [   6557 1841129]...
+# hex(6557)[2:] -> '199d'
+# hex(1841129)[2:] -> '1c17e9'
+# 带入20w14infinite可以发现/warp 199d和/warp 1c17e9效果是一样的
+
+
+# 计算示例
+def example():
+    dim_list = []
+    if os.path.exists('./calculate.dim'):
+        os.remove('./calculate.dim')
+    for i in range(20):
+        s,l = calculate(i*100000,100000)
+        dim_list += l
+#         with open('./calculate.dim', 'ab') as f:
+#             f.write(s)
+        print('[C]已完成%d次计算' % ((i + 1) * 100000))
+    return dim_list
+# dimlist = example()
+# countrepeat(dimlist)
+
+def read_dimlist(path='./calculate.dim'):
+    import struct
+    dimlist = []
+    if os.path.exists(path):
+        file_ = open(path, 'rb')
+        while True:
+            try:
+                dimlist.append(struct.unpack('>I', file_.read(4)))
+            except struct.error:
+                return dimlist
+    return None
+
 
 if __name__ == '__main__':
     import sys
+    import os
+    import struct
     if len(sys.argv) >= 2:
         print(warp2Dimension(' '.join(sys.argv[1:])))
     else:
