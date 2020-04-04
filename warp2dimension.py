@@ -1,52 +1,10 @@
 def getCHARACTERS(int_) -> str:
     return [' ', ',', '.', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r',
-            's', 't', 'u', 'v', 'w', 'x', 'y', 'z'][floorMod(int_, 29)]
-
-
-def floorDiv(x: int, y: int) -> int:
-    r = int(x / y)
-    if (x ^ y) < 0 and r * y != x:
-        r -= 1
-    return r
-
-
-def floorMod(x: int, y: int) -> int:
-    return int(x - floorDiv(x, y) * y)
+            's', 't', 'u', 'v', 'w', 'x', 'y', 'z'][int_%29]
 
 
 def asInt(hex_):
     return hex_[0] & 0xFF | (hex_[1] & 0xFF) << 8 | (hex_[2] & 0xFF) << 16 | (hex_[3] & 0xFF) << 24
-
-
-# 仅用于实验目的，未进一步优化，有建议希望可以提给我！
-# 仿java int溢出取低32位进行处理
-def JavaInt2PythonInt(int_: int) -> int:
-    if int_ >= 2 ** 48:
-        raise ValueError('Invalid Integer')
-    if int_ < 2 ** 31 and int_ >= -2 ** 31:
-        return int_
-    # fix
-    if int_ < -2 ** 31:
-        source = bin(2 ** 48 + int_)[-32:]
-        return int(['0', '-0'][int(source[0])] + source[1:], 2)
-    source = bin(int_)[-32:]
-    if source[0] == '0':
-        return int('0b' + source[1:], 2)
-    else:
-        bm = source[1:]
-        fm = abs(int('0b' + bm, 2) - 1)
-
-        return fm - (2 ** 31 - 1)
-
-
-def javaIntSum(*Intlist):
-    if len(Intlist) == 1:
-        return Intlist[0]
-    else:
-        sum_ = 0
-        for int_ in Intlist:
-            sum_ = JavaInt2PythonInt(sum_ + int_)
-        return sum_
 
 
 # 字符串转换为维度数据
@@ -79,6 +37,7 @@ def warp2Dimension_frombookBox(x, y, z, facing='default'):
 
 def getBook_fromBookbox(x, y, z, facing='default'):
     import math
+    import ctypes
     from java_util_random import JavaRandom
     n3 = y
     if facing == 'NORTH':
@@ -104,8 +63,7 @@ def getBook_fromBookbox(x, y, z, facing='default'):
         for i in range(1, 17):
             sPage_ = ''
             for j in range(1, 129):
-                # n4 = r.nextInt() + r2.nextInt() - r3.nextInt()
-                n4 = javaIntSum(r.nextInt(), r2.nextInt(), -r3.nextInt())
+                n4 = ctypes.c_int32(r.nextInt() + r2.nextInt() - r3.nextInt()).value
                 sPage_ += getCHARACTERS(n4)
             list_.append(sPage_)
         return {'title': str_, 'pages': list_, 'author': '§kUniverse itself'}
@@ -177,6 +135,7 @@ if __name__ == '__main__':
     import os
     import struct
     import math
+    import ctypes
 #     import numpy as np
     if len(sys.argv) >= 2:
         print(warp2Dimension(' '.join(sys.argv[1:])))
