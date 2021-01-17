@@ -15,4 +15,8 @@ Used for some batch calculation
   
 ## [particle-dust-ui.py](./particle-dust-ui.py)  
 ~~暴力破解就是天~~  
+![dust_ingame](./Images/ingame.png)
 DUST粒子的颜色模拟器，通过随机的算法（因为原版就是随机计算，貌似没有什么捷径可图..或许是我才疏学浅了）计算和目标颜色最接近的粒子颜色生成指令，其中[APIparticle_dustONLY.py](./APIparticle_dustONLY.py)为粒子计算提供支持（包括正向解析和反向解析），[particle_ui_pyuic.py](./particle_ui_pyuic.py)是我粗略的写了一个基于PyQt5的UI  
+![main](./Images/dust_main.png)
+![sel](./Images/dust_select.png)
+![set](./Images/dust_setting.png)  
