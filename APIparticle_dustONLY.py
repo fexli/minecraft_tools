@@ -267,7 +267,7 @@ def ProcessImage2dust_singleThread(path, _main, forceseq=0.95):
                     if not time.time() - start_ <= 0.1:
                         _main.simu_color_now.setStyleSheet("background-color:%s" % rgb2hex(r, g, b))
                     start_ = time.time()
-                    data.append([[x, y], list(forcergb2data(r, g, b, forceseq, _main))])
+                    data.append([[x, y], list(forcergb2data(r, g, b, forceseq, _main=_main))])
             return True, data
     else:
         return False, '图像文件读取错误'
